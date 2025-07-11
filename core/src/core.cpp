@@ -394,10 +394,15 @@ int sdrpp_main(int argc, char* argv[]) {
 
     gui::mainWindow.init();
 
-    flog::info("Ready.");
+    flog::info("Ready to start application.");
 
-    // Run render loop (TODO: CHECK RETURN VALUE)
-    backend::renderLoop();
+    // Run render loop and check return value
+    flog::info("Starting render loop...");
+    int renderResult = backend::renderLoop();
+    if (renderResult != 0) {
+        flog::error("Render loop exited with error code: {0}", renderResult);
+        return renderResult;
+    }
 
     // On android, none of this shutdown should happen due to the way the UI works
 #ifndef __ANDROID__

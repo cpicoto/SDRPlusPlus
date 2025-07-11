@@ -87,9 +87,30 @@ namespace backend {
 
         // Create window with graphics context
         monitor = glfwGetPrimaryMonitor();
-        window = glfwCreateWindow(winWidth, winHeight, "SDR++ v" VERSION_STR " (Built at " __TIME__ ", " __DATE__ ")", NULL, NULL);
-        if (window == NULL)
+        flog::info("Attempting to create window");
+        
+        std::string titleAppendix = "";
+        try {
+            std::string title = (std::string)core::args["title"];
+            if (!title.empty()) {
+                titleAppendix = " - " + title;
+                flog::info("Window title appendix: '{0}'", titleAppendix);
+            }
+        }
+        catch (const std::exception& e) {
+            flog::error("Error processing title argument: {0}", e.what());
+            titleAppendix = "";
+        }
+        
+        std::string windowTitle = "SDR++ v" VERSION_STR " (Built at " __TIME__ ", " __DATE__ ")" + titleAppendix;
+        flog::info("Creating window with title: '{0}'", windowTitle);
+        
+        window = glfwCreateWindow(winWidth, winHeight, windowTitle.c_str(), NULL, NULL);
+        if (window == NULL) {
+            flog::error("Failed to create window");
             return 1;
+        }
+        flog::info("Window created successfully");
         glfwMakeContextCurrent(window);
     #else
         const char* glsl_version = "#version 120";
@@ -105,11 +126,31 @@ namespace backend {
             
             // Create window with graphics context
             monitor = glfwGetPrimaryMonitor();
-            window = glfwCreateWindow(winWidth, winHeight, "SDR++ v" VERSION_STR " (Built at " __TIME__ ", " __DATE__ ")", NULL, NULL);
+            flog::info("Attempting to create window with OpenGL {0}.{1}{2}", OPENGL_VERSIONS_MAJOR[i], OPENGL_VERSIONS_MINOR[i], OPENGL_VERSIONS_IS_ES[i] ? " ES" : "");
+            
+            std::string titleAppendix = "";
+            try {
+                std::string title = (std::string)core::args["title"];
+                if (!title.empty()) {
+                    titleAppendix = " - " + title;
+                    flog::info("Window title appendix: '{0}'", titleAppendix);
+                }
+            }
+            catch (const std::exception& e) {
+                flog::error("Error processing title argument: {0}", e.what());
+                titleAppendix = "";
+            }
+            
+            std::string windowTitle = "SDR++ v" VERSION_STR " (Built at " __TIME__ ", " __DATE__ ")" + titleAppendix;
+            flog::info("Creating window with title: '{0}'", windowTitle);
+            
+            window = glfwCreateWindow(winWidth, winHeight, windowTitle.c_str(), NULL, NULL);
             if (window == NULL) {
-                flog::info("OpenGL {0}.{1} {2}was not supported", OPENGL_VERSIONS_MAJOR[i], OPENGL_VERSIONS_MINOR[i], OPENGL_VERSIONS_IS_ES[i] ? "ES " : "");
+                flog::error("OpenGL {0}.{1} {2}was not supported", OPENGL_VERSIONS_MAJOR[i], OPENGL_VERSIONS_MINOR[i], OPENGL_VERSIONS_IS_ES[i] ? "ES " : "");
                 continue;
             }
+            
+            flog::info("Window created successfully");
             flog::info("Using OpenGL {0}.{1}{2}", OPENGL_VERSIONS_MAJOR[i], OPENGL_VERSIONS_MINOR[i], OPENGL_VERSIONS_IS_ES[i] ? " ES" : "");
             glfwMakeContextCurrent(window);
             break;
@@ -233,8 +274,12 @@ namespace backend {
     }
 
     int renderLoop() {
+        flog::info("Starting render loop");
         // Main loop
         while (!glfwWindowShouldClose(window)) {
+#ifdef DEBUG_FRAME_OUTPUT
+            flog::info("Processing frame");
+#endif
             glfwPollEvents();
 
             beginFrame();
