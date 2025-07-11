@@ -80,4 +80,11 @@ if exist build\sink_modules\audio_sink\Release\rtaudio.dll (
     copy build\sink_modules\audio_sink\Release\rtaudio.dll root_dev\
 )
 
+REM Copy config.json template if it exists and is not empty
+if exist config.json (
+    for %%I in (config.json) do if %%~zI gtr 0 (
+        copy config.json root_dev\
+    )
+)
+
 echo Root development environment created successfully!
