@@ -21,3 +21,19 @@ source_modules/dragonlabs_source
 source_modules/badgesdr_source
 decoder_modules/mystery_decoder
 decoder_modules/tetra_decoder
+
+# Added exclusions for VOLK and build artifacts
+volk/
+volk_install/
+cmake-installer.msi
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dylib
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
