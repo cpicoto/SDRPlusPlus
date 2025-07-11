@@ -237,6 +237,10 @@ private:
 
     int bandwidthIdToBw(int id) {
         if (id == 16) { return hackrf_compute_baseband_filter_bw(sampleRate); }
+        if (id < 0 || id >= (sizeof(bandwidths) / sizeof(bandwidths[0]))) {
+            flog::error("Invalid bandwidth ID: {0}, using default", id);
+            return bandwidths[0]; // Return first valid bandwidth as fallback
+        }
         return bandwidths[id];
     }
 
@@ -258,16 +262,32 @@ private:
             return;
         }
 
-        hackrf_set_sample_rate(_this->openDev, _this->sampleRate);
-        hackrf_set_baseband_filter_bandwidth(_this->openDev, _this->bandwidthIdToBw(_this->bwId));
-        hackrf_set_freq(_this->openDev, _this->freq);
+        hackrf_error sr_err = (hackrf_error)hackrf_set_sample_rate(_this->openDev, _this->sampleRate);
+        if (sr_err != HACKRF_SUCCESS) {
+            flog::error("Could not set HackRF sample rate {0}: {1}", _this->selectedSerial, hackrf_error_name(sr_err));
+        }
+        
+        hackrf_error bw_err = (hackrf_error)hackrf_set_baseband_filter_bandwidth(_this->openDev, _this->bandwidthIdToBw(_this->bwId));
+        if (bw_err != HACKRF_SUCCESS) {
+            flog::error("Could not set HackRF bandwidth {0}: {1}", _this->selectedSerial, hackrf_error_name(bw_err));
+        }
+        
+        hackrf_error freq_err = (hackrf_error)hackrf_set_freq(_this->openDev, _this->freq);
+        if (freq_err != HACKRF_SUCCESS) {
+            flog::error("Could not set HackRF frequency {0}: {1}", _this->selectedSerial, hackrf_error_name(freq_err));
+        }
 
         hackrf_set_antenna_enable(_this->openDev, _this->biasT);
         hackrf_set_amp_enable(_this->openDev, _this->amp);
         hackrf_set_lna_gain(_this->openDev, _this->lna);
         hackrf_set_vga_gain(_this->openDev, _this->vga);
 
-        hackrf_start_rx(_this->openDev, callback, _this);
+        hackrf_error start_err = (hackrf_error)hackrf_start_rx(_this->openDev, callback, _this);
+        if (start_err != HACKRF_SUCCESS) {
+            flog::error("Could not start HackRF RX {0}: {1}", _this->selectedSerial, hackrf_error_name(start_err));
+            hackrf_close(_this->openDev);
+            return;
+        }
 
         _this->running = true;
         flog::info("HackRFSourceModule '{0}': Start!", _this->name);
@@ -278,7 +298,13 @@ private:
         if (!_this->running) { return; }
         _this->running = false;
         _this->stream.stopWriter();
-        // TODO: Stream stop
+        
+        // Stop RX streaming before closing device (critical for stability)
+        hackrf_error rx_err = (hackrf_error)hackrf_stop_rx(_this->openDev);
+        if (rx_err != HACKRF_SUCCESS) {
+            flog::error("Could not stop HackRF RX {0}: {1}", _this->selectedSerial, hackrf_error_name(rx_err));
+        }
+        
         hackrf_error err = (hackrf_error)hackrf_close(_this->openDev);
         if (err != HACKRF_SUCCESS) {
             flog::error("Could not close HackRF {0}: {1}", _this->selectedSerial, hackrf_error_name(err));
@@ -290,7 +316,10 @@ private:
     static void tune(double freq, void* ctx) {
         HackRFSourceModule* _this = (HackRFSourceModule*)ctx;
         if (_this->running) {
-            hackrf_set_freq(_this->openDev, freq);
+            hackrf_error freq_err = (hackrf_error)hackrf_set_freq(_this->openDev, freq);
+            if (freq_err != HACKRF_SUCCESS) {
+                flog::error("Could not tune HackRF {0} to {1} Hz: {2}", _this->selectedSerial, freq, hackrf_error_name(freq_err));
+            }
         }
         _this->freq = freq;
         flog::info("HackRFSourceModule '{0}': Tune: {1}!", _this->name, freq);
@@ -333,7 +362,10 @@ private:
         SmGui::FillWidth();
         if (SmGui::Combo(CONCAT("##_hackrf_bw_sel_", _this->name), &_this->bwId, bandwidthsTxt)) {
             if (_this->running) {
-                hackrf_set_baseband_filter_bandwidth(_this->openDev, _this->bandwidthIdToBw(_this->bwId));
+                hackrf_error bw_err = (hackrf_error)hackrf_set_baseband_filter_bandwidth(_this->openDev, _this->bandwidthIdToBw(_this->bwId));
+                if (bw_err != HACKRF_SUCCESS) {
+                    flog::error("Could not set HackRF bandwidth {0}: {1}", _this->selectedSerial, hackrf_error_name(bw_err));
+                }
             }
             config.acquire();
             config.conf["devices"][_this->selectedSerial]["bandwidth"] = _this->bwId;
