@@ -1,3 +1,6 @@
 [submodule "volk"]
 	path = volk
 	url = https://github.com/gnuradio/volk.git
+[submodule "decoder_modules/dvbs_demodulator"]
+	path = decoder_modules/dvbs_demodulator
+	url = https://github.com/cpicoto/sdrpp-dvbs-demodulator.git
