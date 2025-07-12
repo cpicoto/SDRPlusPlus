@@ -1,43 +1,44 @@
-# SDR++ PowerShell Build Script
+# ========================================================
+# SDR++ Native Windows PowerShell Build Script (No MSYS2)
+# ========================================================
 
-Write-Host "======================================================="
-Write-Host "SDR++ Windows Build Script (PowerShell)"
-Write-Host "======================================================="
+# Change to the correct directory
+Set-Location "c:\Users\cpico\source\repos\SDRPlusPlus"
 
-# Find CMake installation
-$cmakePaths = @(
-    "C:\Program Files\CMake\bin\cmake.exe",
-    "C:\Program Files (x86)\CMake\bin\cmake.exe",
-    "${env:ProgramFiles}\CMake\bin\cmake.exe",
-    "${env:ProgramFiles(x86)}\CMake\bin\cmake.exe"
-)
-
-$cmake = $null
-foreach ($path in $cmakePaths) {
-    if (Test-Path $path) {
-        $cmake = $path
-        Write-Host "Found CMake at: $cmake"
-        break
+# Function to find CMake
+function Find-CMake {
+    $cmakePaths = @(
+        "C:\Program Files\CMake\bin\cmake.exe",
+        "C:\Program Files (x86)\CMake\bin\cmake.exe",
+        "${env:ProgramFiles}\Microsoft Visual Studio\2022\Professional\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe",
+        "${env:ProgramFiles}\Microsoft Visual Studio\2022\Community\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe",
+        "${env:ProgramFiles}\Microsoft Visual Studio\2022\Enterprise\Common7\IDE\CommonExtensions\Microsoft\CMake\CMake\bin\cmake.exe"
+    )
+    
+    foreach ($path in $cmakePaths) {
+        if (Test-Path $path) {
+            return $path
+        }
     }
-}
-
-if (-not $cmake) {
+    
     # Try to find cmake in PATH
-    $cmake = Get-Command cmake -ErrorAction SilentlyContinue
-    if ($cmake) {
-        $cmake = $cmake.Source
-        Write-Host "Found CMake in PATH: $cmake"
-    } else {
+    try {
+        $cmake = Get-Command cmake -ErrorAction Stop
+        return $cmake.Source
+    } catch {
         Write-Host "ERROR: CMake not found. Please install CMake or add it to PATH."
         exit 1
     }
 }
 
 # Set paths - these should be adjusted to match your system
-# Using default locations - adjust these paths as needed
 $VCPKG_ROOT = "C:\vcpkg"
 $POTHOS_PATH = "C:\Program Files\PothosSDR"
 $RTAUDIO_PATH = "C:\Program Files (x86)\RtAudio"
+
+# Find CMake
+$cmake = Find-CMake
+Write-Host "Using CMake: $cmake"
 
 # Create build directory if it doesn't exist
 if (!(Test-Path -Path "build")) {
@@ -62,11 +63,24 @@ $cmakeConfigArgs = @(
     "-DOPT_BUILD_AUDIO_SINK=ON",
     "-DOPT_BUILD_DVBS_DEMODULATOR=ON"
 )
+
 & $cmake $cmakeConfigArgs
+
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "CMake configuration failed!"
+    Read-Host "Press Enter to continue..."
+    exit 1
+}
 
 # Build with CMake
 Write-Host "Building SDR++ (this may take a while)..."
 & $cmake --build build --config Release
+
+if ($LASTEXITCODE -ne 0) {
+    Write-Host "Build failed!"
+    Read-Host "Press Enter to continue..."
+    exit 1
+}
 
 # Create development root directory
 Write-Host "Creating root_dev directory..."
@@ -76,3 +90,4 @@ Write-Host "======================================================="
 Write-Host "Build complete!"
 Write-Host "To run SDR++, use: .\build\Release\sdrpp.exe -r root_dev -c"
 Write-Host "======================================================="
+Read-Host "Press Enter to continue..."
