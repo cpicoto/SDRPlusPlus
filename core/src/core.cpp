@@ -170,29 +170,29 @@ int sdrpp_main(int argc, char* argv[]) {
     defConfig["moduleInstances"]["Audio Source"]["module"] = "audio_source";
     defConfig["moduleInstances"]["Audio Source"]["enabled"] = true;
     defConfig["moduleInstances"]["BladeRF Source"]["module"] = "bladerf_source";
-    defConfig["moduleInstances"]["BladeRF Source"]["enabled"] = true;
+    defConfig["moduleInstances"]["BladeRF Source"]["enabled"] = false;
     defConfig["moduleInstances"]["File Source"]["module"] = "file_source";
     defConfig["moduleInstances"]["File Source"]["enabled"] = true;
     defConfig["moduleInstances"]["FobosSDR Source"]["module"] = "fobossdr_source";
-    defConfig["moduleInstances"]["FobosSDR Source"]["enabled"] = true;
+    defConfig["moduleInstances"]["FobosSDR Source"]["enabled"] = false;
     defConfig["moduleInstances"]["HackRF Source"]["module"] = "hackrf_source";
     defConfig["moduleInstances"]["HackRF Source"]["enabled"] = true;
     defConfig["moduleInstances"]["Harogic Source"]["module"] = "harogic_source";
-    defConfig["moduleInstances"]["Harogic Source"]["enabled"] = true;
+    defConfig["moduleInstances"]["Harogic Source"]["enabled"] = false;
     defConfig["moduleInstances"]["Hermes Source"]["module"] = "hermes_source";
     defConfig["moduleInstances"]["Hermes Source"]["enabled"] = true;
     defConfig["moduleInstances"]["HydraSDR Source"]["module"] = "hydrasdr_source";
-    defConfig["moduleInstances"]["HydraSDR Source"]["enabled"] = true;
+    defConfig["moduleInstances"]["HydraSDR Source"]["enabled"] = false;
     defConfig["moduleInstances"]["LimeSDR Source"]["module"] = "limesdr_source";
-    defConfig["moduleInstances"]["LimeSDR Source"]["enabled"] = true;
+    defConfig["moduleInstances"]["LimeSDR Source"]["enabled"] = false;
     defConfig["moduleInstances"]["Network Source"]["module"] = "network_source";
     defConfig["moduleInstances"]["Network Source"]["enabled"] = true;
     defConfig["moduleInstances"]["PerseusSDR Source"]["module"] = "perseus_source";
-    defConfig["moduleInstances"]["PerseusSDR Source"]["enabled"] = true;
+    defConfig["moduleInstances"]["PerseusSDR Source"]["enabled"] = false;
     defConfig["moduleInstances"]["PlutoSDR Source"]["module"] = "plutosdr_source";
     defConfig["moduleInstances"]["PlutoSDR Source"]["enabled"] = true;
     defConfig["moduleInstances"]["RFNM Source"]["module"] = "rfnm_source";
-    defConfig["moduleInstances"]["RFNM Source"]["enabled"] = true;
+    defConfig["moduleInstances"]["RFNM Source"]["enabled"] = false;
     defConfig["moduleInstances"]["RFspace Source"]["module"] = "rfspace_source";
     defConfig["moduleInstances"]["RFspace Source"]["enabled"] = true;
     defConfig["moduleInstances"]["RTL-SDR Source"]["module"] = "rtl_sdr_source";
@@ -200,7 +200,7 @@ int sdrpp_main(int argc, char* argv[]) {
     defConfig["moduleInstances"]["RTL-TCP Source"]["module"] = "rtl_tcp_source";
     defConfig["moduleInstances"]["RTL-TCP Source"]["enabled"] = true;
     defConfig["moduleInstances"]["SDRplay Source"]["module"] = "sdrplay_source";
-    defConfig["moduleInstances"]["SDRplay Source"]["enabled"] = true;
+    defConfig["moduleInstances"]["SDRplay Source"]["enabled"] = false;
     defConfig["moduleInstances"]["SDR++ Server Source"]["module"] = "sdrpp_server_source";
     defConfig["moduleInstances"]["SDR++ Server Source"]["enabled"] = true;
     defConfig["moduleInstances"]["Spectran HTTP Source"]["module"] = "spectran_http_source";
@@ -208,7 +208,7 @@ int sdrpp_main(int argc, char* argv[]) {
     defConfig["moduleInstances"]["SpyServer Source"]["module"] = "spyserver_source";
     defConfig["moduleInstances"]["SpyServer Source"]["enabled"] = true;
     defConfig["moduleInstances"]["USRP Source"]["module"] = "usrp_source";
-    defConfig["moduleInstances"]["USRP Source"]["enabled"] = true;
+    defConfig["moduleInstances"]["USRP Source"]["enabled"] = false;
 
     defConfig["moduleInstances"]["Audio Sink"] = "audio_sink";
     defConfig["moduleInstances"]["Network Sink"] = "network_sink";
@@ -222,6 +222,10 @@ int sdrpp_main(int argc, char* argv[]) {
     // TODO: Enable rigctl_client when ready
     // defConfig["moduleInstances"]["Scanner"] = "scanner";
     // TODO: Enable scanner when ready
+    
+    // DVB Demodulator - enabled by default for satellite/terrestrial reception
+    defConfig["moduleInstances"]["DVB Demodulator"]["module"] = "dvbs_demodulator";
+    defConfig["moduleInstances"]["DVB Demodulator"]["enabled"] = true;
 
 
     // Themes
@@ -309,6 +313,7 @@ int sdrpp_main(int argc, char* argv[]) {
 
     core::configManager.conf["modules"][modCount++] = "m17_decoder.so";
     core::configManager.conf["modules"][modCount++] = "meteor_demodulator.so";
+    core::configManager.conf["modules"][modCount++] = "dvbs_demodulator.so";
     core::configManager.conf["modules"][modCount++] = "radio.so";
 
     core::configManager.conf["modules"][modCount++] = "frequency_manager.so";
