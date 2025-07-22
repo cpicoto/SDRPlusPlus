@@ -46,6 +46,14 @@ if exist build\sink_modules (
     )
 )
 
+REM Copy DVB-S/DVB-T demodulator module specifically (critical for satellite/terrestrial support)
+if exist build\decoder_modules\dvbs_demodulator\Release\dvbs_demodulator.dll (
+    copy build\decoder_modules\dvbs_demodulator\Release\dvbs_demodulator.dll root_dev\modules\
+    echo DVB-S/DVB-T demodulator module copied successfully
+) else (
+    echo WARNING: DVB-S/DVB-T demodulator module not found - build may be incomplete
+)
+
 REM Copy all decoder modules
 if exist build\decoder_modules (
     for /d %%d in (build\decoder_modules\*) do (

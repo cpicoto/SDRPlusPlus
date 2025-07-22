@@ -273,7 +273,7 @@ namespace net {
         if (GetAdaptersAddresses(AF_INET, 0, NULL, addresses, &size) == ERROR_BUFFER_OVERFLOW) {
             addresses = (PIP_ADAPTER_ADDRESSES)realloc(addresses, size);
             if (GetAdaptersAddresses(AF_INET, 0, NULL, addresses, &size)) {
-                throw std::exception("Could not list network interfaces");
+                throw std::runtime_error("Could not list network interfaces");
             }
         }
 
