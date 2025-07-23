@@ -40,6 +40,57 @@ To test the build locally:
 
 This creates a `root_dev` directory with all binaries and dependencies for local testing.
 
+## Fast Development Iteration Scripts
+
+For rapid development and testing, especially when working on DVB demodulator modules, use these automation scripts:
+
+### DVB Module Development Scripts
+
+#### 1. Full Build and Deploy
+```batch
+.\build_and_deploy_dvb.bat          # Incremental build and deploy
+.\build_and_deploy_dvb.bat skip     # Deploy only (no build)
+```
+- Builds the DVB demodulator module
+- Deploys to `root_dev` for testing
+- Copies base files if needed
+- Provides detailed status output
+
+#### 2. Ultra-Fast Iteration
+```batch
+.\fast_deploy.bat                   # Minimal rebuild and deploy (fastest)
+```
+- Rebuilds only the DVB module
+- Immediately deploys to `root_dev`
+- Optimized for quick code changes during debugging
+- Takes ~10-15 seconds vs full build taking 2-3 minutes
+
+#### 3. Quick Testing
+```batch
+.\test_dvbt.bat                     # Launch SDR++ with debug console
+```
+- Changes to `root_dev` directory
+- Launches SDR++ with console output visible
+- Perfect for seeing debug messages during DVB-T testing
+- Validates environment before launching
+
+### Development Workflow Example
+When debugging DVB-T crashes:
+1. Edit source code in Visual Studio
+2. Run `.\fast_deploy.bat` (builds and deploys in seconds)
+3. Run `.\test_dvbt.bat` (launches with debug output)
+4. Test DVB-T mode selection to see crash location
+5. Repeat steps 1-4 for rapid iteration
+
+### Script Locations and Usage
+All scripts are located in the solution root directory:
+- `build_and_deploy_dvb.bat` - Full development deployment
+- `fast_deploy.bat` - Rapid iteration deployment  
+- `test_dvbt.bat` - Quick test launcher
+- `create_root.bat` - Legacy full deployment script
+
+**Note**: These scripts automatically handle directory changes and path resolution, eliminating the need to manually navigate between directories during development.
+
 ## Packaging Workflow
 
 ### Complete Build and Package

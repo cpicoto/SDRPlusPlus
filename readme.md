@@ -99,6 +99,29 @@ cmake --build . --config Release
 
 ## Running for development
 
+### Fast Development with Automation Scripts
+
+For rapid development iteration, especially when working on DVB demodulator modules, use the provided automation scripts:
+
+```bat
+# Ultra-fast module rebuild and deploy (~10-15 seconds)
+.\fast_deploy.bat
+
+# Complete DVB module build and deploy (~30-60 seconds)  
+.\build_and_deploy_dvb.bat
+
+# Quick test launcher with debug output
+.\test_dvbt.bat
+```
+
+These scripts provide:
+- **Rapid iteration cycles** for debugging and testing
+- **Automatic directory handling** and path resolution
+- **Debug output visibility** for crash analysis
+- **Status reporting** with file sizes and timestamps
+
+See `DEVELOPMENT_SCRIPTS_REFERENCE.md` for complete documentation.
+
 ### Create a new configuration root directory
 
 ```bat
