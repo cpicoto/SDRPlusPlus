@@ -1,0 +1,149 @@
+{
+    "bandColors": {
+        "amateur": "#FF0000FF",
+        "aviation": "#00FF00FF",
+        "broadcast": "#0000FFFF",
+        "marine": "#00FFFFFF",
+        "military": "#FFFF00FF"
+    },
+    "bandPlan": "General",
+    "bandPlanEnabled": false,
+    "bandPlanPos": 0,
+    "centerTuning": false,
+    "colorMap": "Classic",
+    "decimation": 1,
+    "fastFFT": false,
+    "fftHeight": 300,
+    "fftHold": false,
+    "fftHoldSpeed": 60,
+    "fftRate": 20,
+    "fftSize": 65536,
+    "fftSmoothing": false,
+    "fftSmoothingSpeed": 100,
+    "fftWindow": 2,
+    "frequency": 666000000.0,
+    "fullWaterfallUpdate": false,
+    "fullscreen": false,
+    "invertIQ": false,
+    "iqCorrection": false,
+    "lockMenuOrder": false,
+    "manualOffset": 0.0,
+    "max": 0.0,
+    "maximized": false,
+    "menuElements": [
+        {
+            "name": "Source",
+            "open": true
+        },
+        {
+            "name": "Radio",
+            "open": true
+        },
+        {
+            "name": "Recorder",
+            "open": true
+        },
+        {
+            "name": "Sinks",
+            "open": true
+        },
+        {
+            "name": "Frequency Manager",
+            "open": true
+        },
+        {
+            "name": "VFO Color",
+            "open": true
+        },
+        {
+            "name": "Band Plan",
+            "open": true
+        },
+        {
+            "name": "Display",
+            "open": true
+        },
+        {
+            "name": "Theme",
+            "open": true
+        },
+        {
+            "name": "Module Manager",
+            "open": true
+        },
+        {
+            "name": "GNU Radio DVB-T",
+            "open": true
+        }
+    ],
+    "menuWidth": 300,
+    "min": -120.0,
+    "moduleInstances": {
+        "GNU Radio DVB-T": {
+            "enabled": true,
+            "module": "gr_dvbt"
+        },
+        "File Source": {
+            "enabled": true,
+            "module": "file_source"
+        },
+        "RTL-SDR Source": {
+            "enabled": true,
+            "module": "rtl_sdr_source"
+        },
+        "Radio": {
+            "enabled": true,
+            "module": "radio"
+        },
+        "Audio Sink": {
+            "enabled": true,
+            "module": "audio_sink"
+        },
+        "Recorder": {
+            "enabled": true,
+            "module": "recorder"
+        },
+        "Frequency Manager": {
+            "enabled": true,
+            "module": "frequency_manager"
+        }
+    },
+    "modules": [],
+    "modulesDirectory": "./modules",
+    "offsets": {
+        "DK5AV X-Band": -6800000000.0,
+        "Ham-It-Up": 125000000.0,
+        "Ku LNB (10700MHz)": -10700000000.0,
+        "Ku LNB (9750MHz)": -9750000000.0,
+        "MMDS S-band (1998MHz)": -1998000000.0,
+        "SpyVerter": 120000000.0
+    },
+    "resourcesDirectory": "./res",
+    "selectedOffset": "None",
+    "showMenu": true,
+    "showWaterfall": true,
+    "snrSmoothing": false,
+    "snrSmoothingSpeed": 20,
+    "source": "File",
+    "streams": {
+        "Radio": {
+            "muted": false,
+            "sink": "Audio",
+            "volume": 0.5
+        }
+    },
+    "theme": "Dark",
+    "uiScale": 1.0,
+    "vfoColors": {
+        "Radio": "#FFFFFF",
+        "GNU Radio DVB-T": "#00FF00"
+    },
+    "vfoOffsets": {
+        "GNU Radio DVB-T": 0.0,
+        "Radio": -100000.0
+    },
+    "windowSize": {
+        "h": 720,
+        "w": 1280
+    }
+}

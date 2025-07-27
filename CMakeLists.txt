@@ -47,8 +47,8 @@ option(OPT_BUILD_PORTAUDIO_SINK "Build PortAudio Sink Module (Dependencies: port
 # Decoders
 option(OPT_BUILD_ATV_DECODER "Build ATV decoder (no dependencies required)" OFF)
 option(OPT_BUILD_DAB_DECODER "Build the DAB/DAB+ decoder (no dependencies required)" OFF)
-option(OPT_BUILD_DVBS_DEMODULATOR "Build DVB-S/DVB-S2 demodulator (no dependencies required)" ON)
 option(OPT_BUILD_FALCON9_DECODER "Build the falcon9 live decoder (Dependencies: ffplay)" OFF)
+option(OPT_BUILD_GR_DVBT "Build GNU Radio-style DVB-T decoder (Dependencies: fftw3)" ON)
 option(OPT_BUILD_KG_SSTV_DECODER "Build the KG SSTV (KG-STV) decoder module (no dependencies required)" OFF)
 option(OPT_BUILD_M17_DECODER "Build the M17 decoder module (Dependencies: codec2)" OFF)
 option(OPT_BUILD_METEOR_DEMODULATOR "Build the meteor demodulator module (no dependencies required)" ON)
@@ -268,13 +268,13 @@ if (OPT_BUILD_DAB_DECODER)
 add_subdirectory("decoder_modules/dab_decoder")
 endif (OPT_BUILD_DAB_DECODER)
 
-if (OPT_BUILD_DVBS_DEMODULATOR)
-add_subdirectory("decoder_modules/dvbs_demodulator")
-endif (OPT_BUILD_DVBS_DEMODULATOR)
-
 if (OPT_BUILD_FALCON9_DECODER)
 add_subdirectory("decoder_modules/falcon9_decoder")
 endif (OPT_BUILD_FALCON9_DECODER)
+
+if (OPT_BUILD_GR_DVBT)
+add_subdirectory("decoder_modules/gr_dvbt")
+endif (OPT_BUILD_GR_DVBT)
 
 if (OPT_BUILD_KG_SSTV_DECODER)
 add_subdirectory("decoder_modules/kg_sstv_decoder")
